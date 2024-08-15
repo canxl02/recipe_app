@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masonry_view/flutter_masonry_view.dart';
 import 'package:get/get.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
+import 'package:recipe_app/constants/color.dart';
 import 'package:recipe_app/model/recipe.dart';
+import 'package:recipe_app/provider/favorite_provider.dart';
 import 'package:recipe_app/screens/recipe_viewer.dart';
 
 class MyFavs extends StatelessWidget {
@@ -9,6 +13,8 @@ class MyFavs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = FavoriteProvider.of(context);
+    final finalList = provider.favorites;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -19,9 +25,8 @@ class MyFavs extends StatelessWidget {
           style: TextStyle(fontFamily: "hellix", color: Colors.black),
         ),
       ),
-      /*
       body: MasonryView(
-        listOfItem: favList,
+        listOfItem: finalList,
         numberOfColumn: 2,
         itemBuilder: (item) {
           Recipe recipe = item as Recipe;
@@ -36,8 +41,6 @@ class MyFavs extends StatelessWidget {
           );
         },
       ),
-
-      */
     );
   }
 }

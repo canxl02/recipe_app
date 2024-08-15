@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:recipe_app/constants/color.dart';
 import 'package:recipe_app/model/recipe.dart';
+import 'package:recipe_app/provider/my_recipes_provider.dart';
 import 'package:recipe_app/screens/my_recipes.dart';
 
 class AddRecipe extends StatefulWidget {
@@ -20,6 +21,7 @@ class _AddRecipeState extends State<AddRecipe> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = MyRecipesProvider.of(context);
     double deviceWidth = MediaQuery.sizeOf(context).width;
     double deviceHeight = MediaQuery.sizeOf(context).height;
     return SafeArea(
@@ -178,15 +180,13 @@ class _AddRecipeState extends State<AddRecipe> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: HexColor(myGreen)),
                   onPressed: () {
-                    /*
-                        Recipe newRecipe = Recipe(
-                            ingredients: ingredientsController.text,
-                            instructions: instructionsController.text,
-                            name: titleController.text,
-                            servings: servingsController.text,
-                            image: "");
-                        widget.addNewRecipe(newRecipe);
-                        */
+                    Recipe newRecipe = Recipe(
+                        ingredients: ingredientsController.text,
+                        instructions: instructionsController.text,
+                        name: titleController.text,
+                        servings: servingsController.text,
+                        image: "lib/assets/images/image_m.jpg");
+                    provider.addRecipe(newRecipe);
 
                     Navigator.push(
                         context,

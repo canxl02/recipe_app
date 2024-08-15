@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class AuthServices {
   Future<String> signupUser({
@@ -16,16 +15,16 @@ class AuthServices {
           name.isNotEmpty ||
           number.isNotEmpty) {
         // register user in auth with email and password
-        UserCredential cred =
+        UserCredential userCredential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
         // add user to your  firestore database
-        print(cred.user!.email);
+        print(userCredential.user!.email);
         await FirebaseFirestore.instance
             .collection("Users")
-            .doc(cred.user!.email)
+            .doc(userCredential.user!.email)
             .set({
           'number': number,
           'name': name,

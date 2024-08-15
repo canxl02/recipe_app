@@ -7,16 +7,17 @@ import 'package:provider/provider.dart';
 import 'package:recipe_app/constants/color.dart';
 import 'package:recipe_app/model/recipe.dart';
 import 'package:recipe_app/provider/favorite_provider.dart';
+import 'package:recipe_app/provider/my_recipes_provider.dart';
 import 'package:recipe_app/screens/my_favs.dart';
 
-class RecipeViewer extends StatefulWidget {
-  const RecipeViewer({super.key});
+class MyRecipeViewer extends StatefulWidget {
+  const MyRecipeViewer({super.key});
 
   @override
-  State<RecipeViewer> createState() => _RecipeViewerState();
+  State<MyRecipeViewer> createState() => _MyRecipeViewerState();
 }
 
-class _RecipeViewerState extends State<RecipeViewer> {
+class _MyRecipeViewerState extends State<MyRecipeViewer> {
   late Recipe recipe;
   @override
   void initState() {
@@ -26,20 +27,17 @@ class _RecipeViewerState extends State<RecipeViewer> {
   }
 
   Widget build(BuildContext context) {
-    final provider = FavoriteProvider.of(context);
+    final provider = MyRecipesProvider.of(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(backgroundColor: Colors.white, actions: [
         IconButton(
           onPressed: () {
-            provider.toggleFavorite(recipe);
+            provider.removeRecipe(recipe);
           },
-          icon: Icon(
-            provider.isExist(recipe)
-                ? Icons.favorite
-                : Icons.favorite_border_outlined,
-            color: provider.isExist(recipe) ? Colors.red : null,
+          icon: const Icon(
+            Icons.delete_forever_rounded,
             size: 30,
           ),
         ),

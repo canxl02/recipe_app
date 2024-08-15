@@ -1,6 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_app/myWidgets/my_buttonA.dart';
 import 'package:recipe_app/myWidgets/my_textfieldA.dart';
@@ -42,25 +39,6 @@ class _RegisterPageState extends State<RegisterPage> {
       },
     );
   }
-
-  /* void signUserUp() async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: emailController.text, password: passwordController.text);
-
-      FirebaseFirestore.instance
-          .collection("Users")
-          .doc(userCredential.user!.email)
-          .set({
-        "username": emailController.text.split("@")[0],
-        "bio": "empty bio..."
-      });
-    } on FirebaseAuthException catch (e) {
-      showError(e.code);
-    }
-  }
-  */
 
   @override
   Widget build(BuildContext context) {

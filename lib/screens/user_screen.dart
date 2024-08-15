@@ -70,57 +70,73 @@ class _UserScreenState extends State<UserScreen> {
           centerTitle: true,
         ),
         body: StreamBuilder<DocumentSnapshot>(
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final userData = snapshot.data!.data() as Map<String, dynamic>;
-                return ListView(
-                  children: [
-                    const SizedBox(height: 50),
-                    const Icon(Icons.person, size: 92),
-                    const SizedBox(height: 10),
-                    Text(
-                      currentUser!.email!,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontFamily: "hellix",
-                          color: Colors.grey[700],
-                          fontSize: 15),
-                    ),
-                    const SizedBox(height: 50),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25),
-                      child: Text(
-                        "My Details",
-                        style: TextStyle(color: Colors.grey[600], fontSize: 20),
-                      ),
-                    ),
-                    MyTextbox(
-                      sectionName: "username",
-                      text: userData["name"],
-                      onPressed: () => editField("name"),
-                    ),
-                    MyTextbox(
-                      sectionName: "phone number",
-                      text: userData["number"],
-                      onPressed: () => editField("number"),
-                    ),
-                    MyTextbox(
-                      sectionName: "bio",
-                      text: userData["bio"],
-                      onPressed: () => editField("bio"),
-                    ),
-                  ],
-                );
-              } else if (snapshot.hasError) {
+          stream: userCollection.doc(currentUser!.email).snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              // Check if document exists
+              if (!snapshot.data!.exists) {
                 return Center(
-                  child: Text("Error ${snapshot.error}"),
+                  child: Text("User data does not exist."),
                 );
               }
-              return const Center(child: CircularProgressIndicator());
-            },
-            stream: FirebaseFirestore.instance
-                .collection("Users")
-                .doc(currentUser!.email)
-                .snapshots()));
+
+              // Safely cast data to Map<String, dynamic>
+              final userData = snapshot.data!.data() as Map<String, dynamic>?;
+              print(userData);
+              // If userData is null, handle the case
+              if (userData == null) {
+                return Center(
+                  child: Text("No user data available."),
+                );
+              }
+
+              // Proceed with displaying user data
+              return ListView(
+                children: [
+                  const SizedBox(height: 50),
+                  const Icon(Icons.person, size: 92),
+                  const SizedBox(height: 10),
+                  Text(
+                    currentUser!.email!,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: "hellix",
+                      color: Colors.grey[700],
+                      fontSize: 15,
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25),
+                    child: Text(
+                      "My Details",
+                      style: TextStyle(color: Colors.grey[600], fontSize: 20),
+                    ),
+                  ),
+                  MyTextbox(
+                    sectionName: "username",
+                    text: userData["name"] ?? "No name provided",
+                    onPressed: () => editField("name"),
+                  ),
+                  MyTextbox(
+                    sectionName: "phone number",
+                    text: userData["number"] ?? "No number provided",
+                    onPressed: () => editField("number"),
+                  ),
+                  MyTextbox(
+                    sectionName: "bio",
+                    text: userData["bio"] ?? "No bio provided",
+                    onPressed: () => editField("bio"),
+                  ),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text("Error: ${snapshot.error}"),
+              );
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
+        ));
   }
 }
