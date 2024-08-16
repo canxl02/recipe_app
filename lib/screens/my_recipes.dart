@@ -1,18 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_masonry_view/flutter_masonry_view.dart';
 import 'package:get/get.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:recipe_app/constants/color.dart';
 import 'package:recipe_app/model/recipe.dart';
-import 'package:recipe_app/provider/my_recipes_provider.dart';
 import 'package:recipe_app/screens/my_recipe_viewer.dart';
-import 'package:recipe_app/screens/recipe_viewer.dart';
 
-class MyRecipes extends StatelessWidget {
+class MyRecipes extends StatefulWidget {
   const MyRecipes({super.key});
 
   @override
+  State<MyRecipes> createState() => _MyRecipesState();
+}
+
+class _MyRecipesState extends State<MyRecipes> {
+  final _firestore = FirebaseFirestore.instance;
+
+  @override
   Widget build(BuildContext context) {
-    final provider = MyRecipesProvider.of(context);
-    final finalListt = provider.myRecipes;
+    CollectionReference MyRecipesRef = _firestore.collection("MyRecipes");
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -23,19 +30,51 @@ class MyRecipes extends StatelessWidget {
           style: TextStyle(fontFamily: "hellix", color: Colors.black),
         ),
       ),
-      body: MasonryView(
-        listOfItem: finalListt,
-        numberOfColumn: 2,
-        itemBuilder: (item) {
-          Recipe recipe = item as Recipe;
-          String imageName = recipe.image;
-          return InkWell(
-            onTap: () {
-              Get.to(() => const MyRecipeViewer(),
-                  transition: Transition.rightToLeft,
-                  arguments: {"recipe": recipe});
+      body: StreamBuilder<QuerySnapshot>(
+        stream: MyRecipesRef.snapshots(),
+        builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
+          if (!asyncSnapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
+          List<DocumentSnapshot> listOfDocumentsSnap = asyncSnapshot.data.docs;
+          return ListView.builder(
+            itemCount: listOfDocumentsSnap.length,
+            itemBuilder: (context, index) {
+              var doc = listOfDocumentsSnap[index];
+              Recipe recipe = Recipe(
+                name: doc["name"],
+                ingredients: doc["ingredients"],
+                servings: doc["servings"],
+                instructions: doc["instructions"],
+                image: doc["image"],
+              );
+
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  child: ListTile(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    tileColor: HexColor(backgroundColor),
+                    trailing: IconButton(
+                        onPressed: () {
+                          listOfDocumentsSnap[index].reference.delete();
+                        },
+                        icon: Icon(Icons.delete_forever)),
+                    onTap: () {
+                      Get.to(
+                        () => const MyRecipeViewer(),
+                        arguments: {"recipe": recipe},
+                        transition: Transition.rightToLeft,
+                      );
+                    },
+                    title: Text(recipe.name),
+                  ),
+                ),
+              );
             },
-            child: Image.asset(imageName),
           );
         },
       ),

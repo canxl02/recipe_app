@@ -1,5 +1,6 @@
 // ignore_for_file: annotate_overrides
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -19,29 +20,19 @@ class MyRecipeViewer extends StatefulWidget {
 
 class _MyRecipeViewerState extends State<MyRecipeViewer> {
   late Recipe recipe;
+  final _firestore = FirebaseFirestore.instance;
   @override
   void initState() {
     recipe = Get.arguments["recipe"];
-    print(recipe.ingredients);
     super.initState();
   }
 
   Widget build(BuildContext context) {
-    final provider = MyRecipesProvider.of(context);
-
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, actions: [
-        IconButton(
-          onPressed: () {
-            provider.removeRecipe(recipe);
-          },
-          icon: const Icon(
-            Icons.delete_forever_rounded,
-            size: 30,
-          ),
-        ),
-      ]),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [

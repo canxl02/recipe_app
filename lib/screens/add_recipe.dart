@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:recipe_app/constants/color.dart';
 import 'package:recipe_app/model/recipe.dart';
-import 'package:recipe_app/provider/my_recipes_provider.dart';
+
 import 'package:recipe_app/screens/my_recipes.dart';
+import 'package:uuid/uuid.dart';
 
 class AddRecipe extends StatefulWidget {
   const AddRecipe({super.key /*, required this.addNewRecipe*/});
@@ -14,6 +16,9 @@ class AddRecipe extends StatefulWidget {
 }
 
 class _AddRecipeState extends State<AddRecipe> {
+  String dropdownValue = "One";
+  var uuid = Uuid();
+  final _firestore = FirebaseFirestore.instance;
   TextEditingController titleController = TextEditingController();
   TextEditingController servingsController = TextEditingController();
   TextEditingController ingredientsController = TextEditingController();
@@ -21,7 +26,8 @@ class _AddRecipeState extends State<AddRecipe> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = MyRecipesProvider.of(context);
+    CollectionReference myRecipesRef = _firestore.collection("MyRecipes");
+
     double deviceWidth = MediaQuery.sizeOf(context).width;
     double deviceHeight = MediaQuery.sizeOf(context).height;
     return SafeArea(
@@ -175,18 +181,57 @@ class _AddRecipeState extends State<AddRecipe> {
                 ),
               ),
               Padding(
+                padding: const EdgeInsets.only(
+                    left: 15, right: 15, top: 20, bottom: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 8),
+                      decoration: BoxDecoration(
+                        color: HexColor(backgroundColor),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: DropdownButton<String>(
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownValue = newValue!;
+                          });
+                        },
+                        value: dropdownValue,
+                        items: const [
+                          DropdownMenuItem<String>(
+                              child: Text("Choose Image"), value: "One"),
+                          DropdownMenuItem<String>(
+                              child: Text("One"),
+                              value: "lib/assets/images/image_m.jpg"),
+                          DropdownMenuItem<String>(
+                              child: Text("Two"),
+                              value: "lib/assets/images/image11.jpeg"),
+                          DropdownMenuItem<String>(
+                              child: Text("Three"),
+                              value: "lib/assets/images/image10.jpeg"),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       backgroundColor: HexColor(myGreen)),
-                  onPressed: () {
+                  onPressed: () async {
                     Recipe newRecipe = Recipe(
                         ingredients: ingredientsController.text,
                         instructions: instructionsController.text,
                         name: titleController.text,
                         servings: servingsController.text,
-                        image: "lib/assets/images/image_m.jpg");
-                    provider.addRecipe(newRecipe);
+                        image: dropdownValue);
+
+                    await myRecipesRef.doc(uuid.v4()).set(newRecipe.toMap());
 
                     Navigator.push(
                         context,
@@ -209,3 +254,23 @@ class _AddRecipeState extends State<AddRecipe> {
     );
   }
 }
+/*DropdownButton<String>(
+                          value: dropdownValue,
+                          items: const [
+                            DropdownMenuItem<String>(
+                                child: Text("Choose Image"), value: "One"),
+                            DropdownMenuItem<String>(
+                                child: Text("One"),
+                                value: "lib/assets/images/image_m.jpg"),
+                            DropdownMenuItem<String>(
+                                child: Text("Two"),
+                                value: "lib/assets/images/image11.jpeg"),
+                            DropdownMenuItem<String>(
+                                child: Text("Three"),
+                                value: "lib/assets/images/image10.jpeg"),
+                          ],
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownValue = newValue!;
+                            });
+                          }),*/

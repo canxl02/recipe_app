@@ -75,7 +75,7 @@ class _UserScreenState extends State<UserScreen> {
             if (snapshot.hasData) {
               // Check if document exists
               if (!snapshot.data!.exists) {
-                return Center(
+                return const Center(
                   child: Text("User data does not exist."),
                 );
               }
@@ -85,7 +85,7 @@ class _UserScreenState extends State<UserScreen> {
               print(userData);
               // If userData is null, handle the case
               if (userData == null) {
-                return Center(
+                return const Center(
                   child: Text("No user data available."),
                 );
               }
