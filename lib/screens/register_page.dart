@@ -18,7 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final numberController = TextEditingController();
 
   void signupUser() async {
-    String res = await AuthServices().signupUser(
+   await AuthServices().signupUser(
         email: emailController.text,
         password: passwordController.text,
         name: nameController.text,

@@ -1,15 +1,11 @@
 // ignore_for_file: annotate_overrides
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:provider/provider.dart';
+
 import 'package:recipe_app/constants/color.dart';
 import 'package:recipe_app/model/recipe.dart';
-import 'package:recipe_app/provider/favorite_provider.dart';
-import 'package:recipe_app/provider/my_recipes_provider.dart';
-import 'package:recipe_app/screens/my_favs.dart';
 
 class MyRecipeViewer extends StatefulWidget {
   const MyRecipeViewer({super.key});
@@ -20,7 +16,7 @@ class MyRecipeViewer extends StatefulWidget {
 
 class _MyRecipeViewerState extends State<MyRecipeViewer> {
   late Recipe recipe;
-  final _firestore = FirebaseFirestore.instance;
+
   @override
   void initState() {
     recipe = Get.arguments["recipe"];

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +54,7 @@ class _UserScreenState extends State<UserScreen> {
         ],
       ),
     );
-    if (newValue.trim().length > 0) {
+    if (newValue.trim().isNotEmpty) {
       await userCollection.doc(currentUser!.email).update({field: newValue});
     }
   }

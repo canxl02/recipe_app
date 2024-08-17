@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masonry_view/flutter_masonry_view.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:provider/provider.dart';
-import 'package:recipe_app/constants/color.dart';
+
 import 'package:recipe_app/model/recipe.dart';
 import 'package:recipe_app/provider/favorite_provider.dart';
 import 'package:recipe_app/screens/recipe_viewer.dart';

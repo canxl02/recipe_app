@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -8,8 +10,7 @@ import 'package:recipe_app/screens/my_recipes.dart';
 import 'package:uuid/uuid.dart';
 
 class AddRecipe extends StatefulWidget {
-  const AddRecipe({super.key /*, required this.addNewRecipe*/});
-  /*final void Function(Recipe newRecipe) addNewRecipe;*/
+  const AddRecipe({super.key});
 
   @override
   State<AddRecipe> createState() => _AddRecipeState();
@@ -17,7 +18,7 @@ class AddRecipe extends StatefulWidget {
 
 class _AddRecipeState extends State<AddRecipe> {
   String dropdownValue = "One";
-  var uuid = Uuid();
+  var uuid = const Uuid();
   final _firestore = FirebaseFirestore.instance;
   TextEditingController titleController = TextEditingController();
   TextEditingController servingsController = TextEditingController();
@@ -202,16 +203,16 @@ class _AddRecipeState extends State<AddRecipe> {
                         value: dropdownValue,
                         items: const [
                           DropdownMenuItem<String>(
-                              child: Text("Choose Image"), value: "One"),
+                              value: "One", child: Text("Choose Image")),
                           DropdownMenuItem<String>(
-                              child: Text("One"),
-                              value: "lib/assets/images/image_m.jpg"),
+                              value: "lib/assets/images/image_m.jpg",
+                              child: Text("One")),
                           DropdownMenuItem<String>(
-                              child: Text("Two"),
-                              value: "lib/assets/images/image11.jpeg"),
+                              value: "lib/assets/images/image11.jpeg",
+                              child: Text("Two")),
                           DropdownMenuItem<String>(
-                              child: Text("Three"),
-                              value: "lib/assets/images/image10.jpeg"),
+                              value: "lib/assets/images/image10.jpeg",
+                              child: Text("Three")),
                         ],
                       ),
                     ),
@@ -254,23 +255,3 @@ class _AddRecipeState extends State<AddRecipe> {
     );
   }
 }
-/*DropdownButton<String>(
-                          value: dropdownValue,
-                          items: const [
-                            DropdownMenuItem<String>(
-                                child: Text("Choose Image"), value: "One"),
-                            DropdownMenuItem<String>(
-                                child: Text("One"),
-                                value: "lib/assets/images/image_m.jpg"),
-                            DropdownMenuItem<String>(
-                                child: Text("Two"),
-                                value: "lib/assets/images/image11.jpeg"),
-                            DropdownMenuItem<String>(
-                                child: Text("Three"),
-                                value: "lib/assets/images/image10.jpeg"),
-                          ],
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              dropdownValue = newValue!;
-                            });
-                          }),*/

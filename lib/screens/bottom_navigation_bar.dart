@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:recipe_app/constants/color.dart';
-import 'package:recipe_app/model/recipe.dart';
 
 import 'package:recipe_app/screens/add_recipe.dart';
 import 'package:recipe_app/screens/user.dart';
 import 'package:recipe_app/screens/home_screen.dart';
-//import 'package:recipe_app/screens/user_screen.dart';
 
 class BottomnavigationBar extends StatefulWidget {
   const BottomnavigationBar({super.key});
@@ -21,23 +19,13 @@ class _BottomnavigationBarState extends State<BottomnavigationBar> {
   late AddRecipe addRecipe;
   late MyUser userScreen;
 
-  //late UserScreen userScreen;
-
   int _selectedIndex = 0;
-
-  /* void addNewRecipe(Recipe newRecipe) {
-    setState(() {
-      recipeList.add(newRecipe);
-    });
-  */
 
   @override
   void initState() {
     super.initState();
     homeScreen = const Homescreen();
-    addRecipe = AddRecipe(
-        /* addNewRecipe: (newRecipe) => addNewRecipe(newRecipe),*/
-        );
+    addRecipe = const AddRecipe();
     userScreen = const MyUser();
 
     myScreens = [homeScreen, addRecipe, userScreen];

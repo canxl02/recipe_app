@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,7 +36,7 @@ class _MyRecipesState extends State<MyRecipes> {
         stream: MyRecipesRef.snapshots(),
         builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
           if (!asyncSnapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           List<DocumentSnapshot> listOfDocumentsSnap = asyncSnapshot.data.docs;
           return ListView.builder(
@@ -62,7 +64,7 @@ class _MyRecipesState extends State<MyRecipes> {
                         onPressed: () {
                           listOfDocumentsSnap[index].reference.delete();
                         },
-                        icon: Icon(Icons.delete_forever)),
+                        icon: const Icon(Icons.delete_forever)),
                     onTap: () {
                       Get.to(
                         () => const MyRecipeViewer(),
