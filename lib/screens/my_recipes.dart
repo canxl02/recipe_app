@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -16,11 +17,12 @@ class MyRecipes extends StatefulWidget {
 }
 
 class _MyRecipesState extends State<MyRecipes> {
-  final _firestore = FirebaseFirestore.instance;
-
   @override
   Widget build(BuildContext context) {
-    CollectionReference MyRecipesRef = _firestore.collection("MyRecipes");
+    final userCollection = FirebaseFirestore.instance.collection("Users");
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final CollectionReference myRecipesRef =
+        userCollection.doc(currentUser!.email).collection("MyRecipes");
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -33,7 +35,7 @@ class _MyRecipesState extends State<MyRecipes> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: MyRecipesRef.snapshots(),
+        stream: myRecipesRef.snapshots(),
         builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
           if (!asyncSnapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
@@ -44,12 +46,12 @@ class _MyRecipesState extends State<MyRecipes> {
             itemBuilder: (context, index) {
               var doc = listOfDocumentsSnap[index];
               Recipe recipe = Recipe(
-                name: doc["name"],
-                ingredients: doc["ingredients"],
-                servings: doc["servings"],
-                instructions: doc["instructions"],
-                image: doc["image"],
-              );
+                  name: doc["name"],
+                  ingredients: doc["ingredients"],
+                  servings: doc["servings"],
+                  instructions: doc["instructions"],
+                  image: doc["image"],
+                  recipeId: doc["recipeId"]);
 
               return Padding(
                 padding: const EdgeInsets.all(8.0),

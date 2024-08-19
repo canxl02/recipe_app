@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:recipe_app/myWidgets/my_list_tile.dart';
 import 'package:recipe_app/screens/my_favs.dart';
 import 'package:recipe_app/screens/my_recipes.dart';
 import 'package:recipe_app/screens/user_screen.dart';
+import 'package:recipe_app/theme/theme_provider.dart';
 
 class MyUser extends StatefulWidget {
   const MyUser({
@@ -54,6 +56,14 @@ class _MyUserState extends State<MyUser> {
                     MaterialPageRoute(
                         builder: (context) => const UserScreen())),
               ),
+              /*  MyListTitle(
+                icon: Icons.mode_night_outlined,
+                text: "Dark Mode",
+                onTap: () {
+                  Provider.of<ThemeProvider>(context, listen: false)
+                      .toggleTheme();
+                },
+              ), */
             ],
           ),
           Padding(

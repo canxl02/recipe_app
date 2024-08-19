@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:recipe_app/constants/color.dart';
@@ -19,7 +20,7 @@ class AddRecipe extends StatefulWidget {
 class _AddRecipeState extends State<AddRecipe> {
   String dropdownValue = "One";
   var uuid = const Uuid();
-  final _firestore = FirebaseFirestore.instance;
+
   TextEditingController titleController = TextEditingController();
   TextEditingController servingsController = TextEditingController();
   TextEditingController ingredientsController = TextEditingController();
@@ -27,7 +28,10 @@ class _AddRecipeState extends State<AddRecipe> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference myRecipesRef = _firestore.collection("MyRecipes");
+    final userCollection = FirebaseFirestore.instance.collection("Users");
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final CollectionReference myRecipesRef =
+        userCollection.doc(currentUser!.email).collection("MyRecipes");
 
     double deviceWidth = MediaQuery.sizeOf(context).width;
     double deviceHeight = MediaQuery.sizeOf(context).height;
@@ -230,9 +234,10 @@ class _AddRecipeState extends State<AddRecipe> {
                         instructions: instructionsController.text,
                         name: titleController.text,
                         servings: servingsController.text,
-                        image: dropdownValue);
+                        image: dropdownValue,
+                        recipeId: uuid.v4());
 
-                    await myRecipesRef.doc(uuid.v4()).set(newRecipe.toMap());
+                    await myRecipesRef.doc().set(newRecipe.toMap());
 
                     Navigator.push(
                         context,

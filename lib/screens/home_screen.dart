@@ -16,6 +16,7 @@ class Homescreen extends StatefulWidget {
 }
 
 class _HomescreenState extends State<Homescreen> {
+  TextEditingController searchController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
@@ -58,9 +59,10 @@ class _HomescreenState extends State<Homescreen> {
                   color: HexColor(backgroundColor),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: const TextField(
+                child: TextField(
+                  controller: searchController,
                   cursorColor: Colors.black,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     prefixIcon: Icon(
                       Icons.search,
@@ -85,12 +87,12 @@ class _HomescreenState extends State<Homescreen> {
                   List<DocumentSnapshot> documents = snapshot.data!.docs;
                   List<Recipe> recipeList = documents.map((doc) {
                     return Recipe(
-                      name: doc["name"],
-                      ingredients: doc["ingredients"],
-                      instructions: doc["instructions"],
-                      servings: doc["servings"],
-                      image: doc["image"],
-                    );
+                        name: doc["name"],
+                        ingredients: doc["ingredients"],
+                        instructions: doc["instructions"],
+                        servings: doc["servings"],
+                        image: doc["image"],
+                        recipeId: doc["recipeId"]);
                   }).toList();
                   return MasonryView(
                     listOfItem: recipeList,

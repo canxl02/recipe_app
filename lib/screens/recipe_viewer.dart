@@ -1,13 +1,14 @@
 // ignore_for_file: annotate_overrides, avoid_print
 
 // import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 import 'package:recipe_app/constants/color.dart';
 import 'package:recipe_app/model/recipe.dart';
-import 'package:recipe_app/provider/favorite_provider.dart';
 
 class RecipeViewer extends StatefulWidget {
   const RecipeViewer({super.key});
@@ -18,29 +19,59 @@ class RecipeViewer extends StatefulWidget {
 
 class _RecipeViewerState extends State<RecipeViewer> {
   late Recipe recipe;
-  // final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late bool isFavorite = false;
+
   @override
   void initState() {
     recipe = Get.arguments["recipe"];
-    print(recipe.ingredients);
+    checkIfFavorite();
     super.initState();
   }
 
-  Widget build(BuildContext context) {
-    final provider = FavoriteProvider.of(context);
+  Future<void> checkIfFavorite() async {
+    final userCollection = FirebaseFirestore.instance.collection("Users");
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final favRef =
+        userCollection.doc(currentUser!.email).collection("Favorites");
 
+    var querySnapshot =
+        await favRef.where('recipeId', isEqualTo: recipe.recipeId).get();
+    setState(() {
+      isFavorite = querySnapshot.docs.isNotEmpty;
+    });
+  }
+
+  Future<void> toggleFavorite() async {
+    final userCollection = FirebaseFirestore.instance.collection("Users");
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final favRef =
+        userCollection.doc(currentUser!.email).collection("Favorites");
+
+    if (isFavorite) {
+      var doc =
+          await favRef.where('recipeId', isEqualTo: recipe.recipeId).get();
+      await doc.docs.first.reference.delete();
+    } else {
+      await favRef.add(recipe.toMap());
+    }
+
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(backgroundColor: Colors.white, actions: [
         IconButton(
           onPressed: () {
-            provider.toggleFavorite(recipe);
+            toggleFavorite();
           },
           icon: Icon(
-            provider.isExist(recipe)
-                ? Icons.favorite
-                : Icons.favorite_border_outlined,
-            color: provider.isExist(recipe) ? Colors.red : null,
+            isFavorite ? Icons.favorite : Icons.favorite_border_outlined,
+            color: isFavorite ? Colors.red : null,
             size: 30,
           ),
         ),
