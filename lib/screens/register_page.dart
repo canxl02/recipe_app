@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_app/myWidgets/my_buttonA.dart';
 import 'package:recipe_app/myWidgets/my_textfieldA.dart';
@@ -18,11 +19,15 @@ class _RegisterPageState extends State<RegisterPage> {
   final numberController = TextEditingController();
 
   void signupUser() async {
-   await AuthServices().signupUser(
-        email: emailController.text,
-        password: passwordController.text,
-        name: nameController.text,
-        number: numberController.text);
+    try {
+      await AuthServices().signupUser(
+          email: emailController.text,
+          password: passwordController.text,
+          name: nameController.text,
+          number: numberController.text);
+    } on FirebaseAuthException catch (e) {
+      showError(e.code);
+    }
   }
 
   void showError(String message) {
@@ -129,7 +134,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 const SizedBox(height: 50),
 
-                // not a member? register now
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20),
                   child: Row(

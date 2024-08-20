@@ -1,9 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:recipe_app/constants/color.dart';
 import 'package:recipe_app/model/recipe.dart';
 
@@ -20,11 +24,32 @@ class AddRecipe extends StatefulWidget {
 class _AddRecipeState extends State<AddRecipe> {
   String dropdownValue = "One";
   var uuid = const Uuid();
-
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
   TextEditingController titleController = TextEditingController();
   TextEditingController servingsController = TextEditingController();
   TextEditingController ingredientsController = TextEditingController();
   TextEditingController instructionsController = TextEditingController();
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<String?> _uploadImageToStorage() async {
+    if (_image == null) return null;
+
+    final storageRef = FirebaseStorage.instance
+        .ref()
+        .child('recipe_images')
+        .child('${uuid.v4()}.jpg');
+
+    await storageRef.putFile(_image!);
+    return await storageRef.getDownloadURL();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -187,37 +212,38 @@ class _AddRecipeState extends State<AddRecipe> {
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 15, right: 15, top: 20, bottom: 8),
+                    left: 15, right: 15, top: 10, bottom: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: HexColor(backgroundColor),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: DropdownButton<String>(
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownValue = newValue!;
-                          });
-                        },
-                        value: dropdownValue,
-                        items: const [
-                          DropdownMenuItem<String>(
-                              value: "One", child: Text("Choose Image")),
-                          DropdownMenuItem<String>(
-                              value: "lib/assets/images/image_m.jpg",
-                              child: Text("One")),
-                          DropdownMenuItem<String>(
-                              value: "lib/assets/images/image11.jpeg",
-                              child: Text("Two")),
-                          DropdownMenuItem<String>(
-                              value: "lib/assets/images/image10.jpeg",
-                              child: Text("Three")),
-                        ],
+                    const Text(
+                      "Add image:",
+                      style: TextStyle(fontFamily: "hellix", fontSize: 20),
+                    ),
+                    InkWell(
+                      onTap: _pickImage,
+                      child: Container(
+                        width: deviceWidth / 3,
+                        height: deviceHeight / 8,
+                        decoration: BoxDecoration(
+                          color: HexColor(backgroundColor),
+                          borderRadius: BorderRadius.circular(14),
+                          image: _image != null
+                              ? DecorationImage(
+                                  image: FileImage(_image!),
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
+                        ),
+                        child: _image == null
+                            ? const Center(
+                                child: Icon(
+                                  Icons.add_a_photo,
+                                  color: Colors.white,
+                                  size: 50,
+                                ),
+                              )
+                            : null,
                       ),
                     ),
                   ],
@@ -229,12 +255,14 @@ class _AddRecipeState extends State<AddRecipe> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: HexColor(myGreen)),
                   onPressed: () async {
+                    String? imageUrl = await _uploadImageToStorage();
+
                     Recipe newRecipe = Recipe(
                         ingredients: ingredientsController.text,
                         instructions: instructionsController.text,
                         name: titleController.text,
                         servings: servingsController.text,
-                        image: dropdownValue,
+                        image: imageUrl ?? '',
                         recipeId: uuid.v4());
 
                     await myRecipesRef.doc().set(newRecipe.toMap());

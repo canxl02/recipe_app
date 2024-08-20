@@ -11,35 +11,33 @@ class AuthServices {
     required String number,
   }) async {
     String res = "Some error Occurred";
-    try {
-      if (email.isNotEmpty ||
-          password.isNotEmpty ||
-          name.isNotEmpty ||
-          number.isNotEmpty) {
-        // register user in auth with email and password
-        UserCredential userCredential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-        // add user to your  firestore database
-        print(userCredential.user!.email);
-        await FirebaseFirestore.instance
-            .collection("Users")
-            .doc(userCredential.user!.email)
-            .set({
-          'number': number,
-          'name': name,
-          'password': password,
-          'email': email,
-          "bio": "empty bio..."
-        });
 
-        res = "success";
-      }
-    } catch (err) {
-      return err.toString();
+    if (email.isNotEmpty ||
+        password.isNotEmpty ||
+        name.isNotEmpty ||
+        number.isNotEmpty) {
+      // register user in auth with email and password
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      // add user to your  firestore database
+      print(userCredential.user!.email);
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(userCredential.user!.email)
+          .set({
+        'number': number,
+        'name': name,
+        'password': password,
+        'email': email,
+        "bio": "empty bio..."
+      });
+
+      res = "success";
     }
+
     return res;
   }
 }

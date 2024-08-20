@@ -1,5 +1,3 @@
-// ignore_for_file: annotate_overrides
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -23,6 +21,7 @@ class _MyRecipeViewerState extends State<MyRecipeViewer> {
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -42,9 +41,18 @@ class _MyRecipeViewerState extends State<MyRecipeViewer> {
                   decoration: BoxDecoration(
                     color: HexColor(backgroundColor),
                     borderRadius: BorderRadius.circular(20),
-                    image: DecorationImage(
-                      image: AssetImage(recipe.image),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: FadeInImage.assetNetwork(
+                      placeholder: 'lib/assets/images/image_m.jpg',
+                      image: recipe.image,
                       fit: BoxFit.cover,
+                      width: 400,
+                      height: 260,
+                      imageErrorBuilder: (context, error, stackTrace) {
+                        return const Center(child: Text('Image not available'));
+                      },
                     ),
                   ),
                 ),

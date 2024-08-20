@@ -72,6 +72,9 @@ class _HomescreenState extends State<Homescreen> {
                     hintText: "Search for recipes",
                     hintStyle: TextStyle(color: Colors.grey, fontSize: 20),
                   ),
+                  onChanged: (value) {
+                    setState(() {});
+                  },
                 ),
               ),
               const SizedBox(
@@ -85,6 +88,8 @@ class _HomescreenState extends State<Homescreen> {
                   }
 
                   List<DocumentSnapshot> documents = snapshot.data!.docs;
+
+                  String searchQuery = searchController.text.toLowerCase();
                   List<Recipe> recipeList = documents.map((doc) {
                     return Recipe(
                         name: doc["name"],
@@ -93,7 +98,10 @@ class _HomescreenState extends State<Homescreen> {
                         servings: doc["servings"],
                         image: doc["image"],
                         recipeId: doc["recipeId"]);
+                  }).where((recipe) {
+                    return recipe.name.toLowerCase().contains(searchQuery);
                   }).toList();
+
                   return MasonryView(
                     listOfItem: recipeList,
                     numberOfColumn: 2,
@@ -105,6 +113,7 @@ class _HomescreenState extends State<Homescreen> {
                           Get.to(() => const RecipeViewer(),
                               transition: Transition.rightToLeft,
                               arguments: {"recipe": recipe});
+                          //searchController.dispose();
                         },
                         child: Image.asset(imageName),
                       );

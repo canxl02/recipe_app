@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -63,10 +61,11 @@ class _MyRecipesState extends State<MyRecipes> {
                         borderRadius: BorderRadius.circular(20)),
                     tileColor: HexColor(backgroundColor),
                     trailing: IconButton(
-                        onPressed: () {
-                          listOfDocumentsSnap[index].reference.delete();
-                        },
-                        icon: const Icon(Icons.delete_forever)),
+                      onPressed: () {
+                        showAlertDialog(context, index, listOfDocumentsSnap);
+                      },
+                      icon: const Icon(Icons.delete_forever),
+                    ),
                     onTap: () {
                       Get.to(
                         () => const MyRecipeViewer(),
@@ -82,6 +81,40 @@ class _MyRecipesState extends State<MyRecipes> {
           );
         },
       ),
+    );
+  }
+
+  void showAlertDialog(BuildContext context, int index,
+      List<DocumentSnapshot> listOfDocumentsSnap) {
+    Widget cancelButton = ElevatedButton(
+      child: const Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = ElevatedButton(
+      child: const Text("Continue"),
+      onPressed: () {
+        listOfDocumentsSnap[index].reference.delete().then((_) {
+          Navigator.pop(context);
+        });
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: const Text("Delete Recipe"),
+      content: const Text("Are you sure you want to delete this recipe?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
