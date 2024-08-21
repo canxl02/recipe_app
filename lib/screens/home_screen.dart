@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lottie/lottie.dart';
 import 'package:recipe_app/constants/color.dart';
 import 'package:flutter_masonry_view/flutter_masonry_view.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,24 @@ class Homescreen extends StatefulWidget {
   State<Homescreen> createState() => _HomescreenState();
 }
 
-class _HomescreenState extends State<Homescreen> {
+class _HomescreenState extends State<Homescreen>
+    with SingleTickerProviderStateMixin {
+  /*late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 3));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }*/
+
   TextEditingController searchController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -60,6 +78,10 @@ class _HomescreenState extends State<Homescreen> {
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: TextField(
+                  onTapOutside: (event) {
+                    print('onTapOutside');
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                   controller: searchController,
                   cursorColor: Colors.black,
                   decoration: const InputDecoration(
@@ -113,7 +135,6 @@ class _HomescreenState extends State<Homescreen> {
                           Get.to(() => const RecipeViewer(),
                               transition: Transition.rightToLeft,
                               arguments: {"recipe": recipe});
-                          //searchController.dispose();
                         },
                         child: Image.asset(imageName),
                       );

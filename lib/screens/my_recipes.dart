@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +95,7 @@ class _MyRecipesState extends State<MyRecipes> {
       },
     );
     Widget continueButton = ElevatedButton(
-      child: const Text("Continue"),
+      child: const Text("Yes"),
       onPressed: () {
         listOfDocumentsSnap[index].reference.delete().then((_) {
           Navigator.pop(context);

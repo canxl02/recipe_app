@@ -19,6 +19,10 @@ class MyTextfielda extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
+        onTapOutside: (event) {
+          print('onTapOutside');
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(

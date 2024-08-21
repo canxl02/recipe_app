@@ -110,6 +110,10 @@ class _AddRecipeState extends State<AddRecipe> {
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: TextField(
+                            onTapOutside: (event) {
+                              print('onTapOutside');
+                              FocusManager.instance.primaryFocus?.unfocus();
+                            },
                             controller: titleController,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
@@ -141,6 +145,10 @@ class _AddRecipeState extends State<AddRecipe> {
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: TextField(
+                            onTapOutside: (event) {
+                              print('onTapOutside');
+                              FocusManager.instance.primaryFocus?.unfocus();
+                            },
                             controller: servingsController,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
@@ -173,6 +181,10 @@ class _AddRecipeState extends State<AddRecipe> {
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: TextField(
+                        onTapOutside: (event) {
+                          print('onTapOutside');
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
                         controller: ingredientsController,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
@@ -201,6 +213,10 @@ class _AddRecipeState extends State<AddRecipe> {
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: TextField(
+                        onTapOutside: (event) {
+                          print('onTapOutside');
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
                         controller: instructionsController,
                         decoration: const InputDecoration(
                           border: InputBorder.none,

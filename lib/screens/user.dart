@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:recipe_app/myWidgets/my_list_tile.dart';
 import 'package:recipe_app/screens/my_favs.dart';
 import 'package:recipe_app/screens/my_recipes.dart';
 import 'package:recipe_app/screens/user_screen.dart';
-import 'package:recipe_app/theme/theme_provider.dart';
 
 class MyUser extends StatefulWidget {
   const MyUser({
@@ -17,7 +15,6 @@ class MyUser extends StatefulWidget {
 }
 
 class _MyUserState extends State<MyUser> {
-  // ignore: non_constant_identifier_names
   final User = FirebaseAuth.instance.currentUser;
 
   @override
@@ -29,11 +26,25 @@ class _MyUserState extends State<MyUser> {
         children: [
           Column(
             children: [
-              const DrawerHeader(
-                child: Icon(
-                  Icons.person,
-                  size: 95,
-                  color: Colors.black87,
+              DrawerHeader(
+                child: Column(
+                  children: [
+                    const Icon(
+                      Icons.person,
+                      size: 95,
+                      color: Colors.black87,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      User!.email!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: "hellix",
+                        color: Colors.grey[700],
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               MyListTitle(
