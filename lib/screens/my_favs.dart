@@ -59,7 +59,18 @@ class MyFavs extends StatelessWidget {
                       transition: Transition.rightToLeft,
                       arguments: {"recipe": recipe});
                 },
-                child: Image.asset(imageName),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(imageName),
+                    const SizedBox(height: 5),
+                    Text(
+                      recipe.name,
+                      style: const TextStyle(
+                          fontFamily: "hellix", color: Colors.black87),
+                    )
+                  ],
+                ),
               );
             },
           );

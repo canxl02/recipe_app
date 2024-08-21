@@ -1,5 +1,6 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, prefer_interpolation_to_compose_strings
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_app/myWidgets/my_list_tile.dart';
@@ -18,6 +19,7 @@ class MyUser extends StatefulWidget {
 
 class _MyUserState extends State<MyUser> {
   final User = FirebaseAuth.instance.currentUser;
+  final userCollection = FirebaseFirestore.instance.collection("Users");
 
   @override
   Widget build(BuildContext context) {
@@ -36,22 +38,38 @@ class _MyUserState extends State<MyUser> {
                       size: 95,
                       color: Colors.black87,
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      User!.email!,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: "hellix",
-                        color: Colors.grey[700],
-                        fontSize: 15,
-                      ),
-                    ),
+                    StreamBuilder<DocumentSnapshot>(
+                        stream: userCollection.doc(User!.email).snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            if (!snapshot.data!.exists) {
+                              return const Center(
+                                child: Text("User data does not exist."),
+                              );
+                            }
+
+                            final userData =
+                                snapshot.data!.data() as Map<String, dynamic>?;
+                            if (userData == null) {
+                              return const Center(
+                                child: Text("No user data available."),
+                              );
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child:
+                                  Center(child: Text("#" + userData["name"])),
+                            );
+                          }
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }),
                   ],
                 ),
               ),
               MyListTitle(
                 icon: Icons.favorite_outlined,
-                text: "My Favourites",
+                text: "My Favorites",
                 onTap: () => Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const MyFavs())),
               ),

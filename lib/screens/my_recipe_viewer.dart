@@ -29,11 +29,12 @@ class _MyRecipeViewerState extends State<MyRecipeViewer> {
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20, right: 15, left: 15),
-              child: Align(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20, right: 15, left: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
                 alignment: Alignment.topCenter,
                 child: Container(
                   height: 260,
@@ -57,36 +58,36 @@ class _MyRecipeViewerState extends State<MyRecipeViewer> {
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  Text(
-                    recipe.name,
-                    style: TextStyle(
-                        fontFamily: "hellixB",
-                        fontSize: 15,
-                        color: Colors.amber[800]),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text("Ingredients: ",
-                      style: TextStyle(fontFamily: "hellixB")),
-                  Text(recipe.ingredients),
-                  const SizedBox(height: 10),
-                  const Text("Servings: ",
-                      style: TextStyle(fontFamily: "hellixB")),
-                  Text(recipe.servings),
-                  const SizedBox(height: 10),
-                  const Text("Instructions: ",
-                      style: TextStyle(fontFamily: "hellixB")),
-                  Text(recipe.instructions),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    Text(
+                      recipe.name,
+                      style: TextStyle(
+                          fontFamily: "hellixB",
+                          fontSize: 15,
+                          color: Colors.amber[800]),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text("Ingredients: ",
+                        style: TextStyle(fontFamily: "hellixB")),
+                    Text(recipe.ingredients),
+                    const SizedBox(height: 10),
+                    const Text("Servings: ",
+                        style: TextStyle(fontFamily: "hellixB")),
+                    Text(recipe.servings),
+                    const SizedBox(height: 10),
+                    const Text("Instructions: ",
+                        style: TextStyle(fontFamily: "hellixB")),
+                    Text(recipe.instructions),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

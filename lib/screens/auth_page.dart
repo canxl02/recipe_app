@@ -21,15 +21,20 @@ class _AuthPageState extends State<AuthPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingScreen();
           } else if (snapshot.hasData) {
-            return FutureBuilder(
-              future: Future.delayed(const Duration(seconds: 2)),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return const BottomnavigationBar();
-                } else {
-                  return LoadingScreen();
-                }
-              },
+            return Stack(
+              children: [
+                const BottomnavigationBar(), // The target page
+                FutureBuilder(
+                  future: Future.delayed(const Duration(seconds: 2)),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return Container(); // Empty container when the delay is over
+                    } else {
+                      return LoadingScreen(); // The transparent loading screen
+                    }
+                  },
+                ),
+              ],
             );
           } else {
             return const LoginOrRegisterPage();

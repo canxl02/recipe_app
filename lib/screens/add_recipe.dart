@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -261,8 +263,8 @@ class _AddRecipeState extends State<AddRecipe> {
                         InkWell(
                           onTap: _isPickingImage ? null : _pickImage,
                           child: Container(
-                            width: deviceWidth / 3,
-                            height: deviceHeight / 8,
+                            width: 130,
+                            height: 100,
                             decoration: BoxDecoration(
                               color: HexColor(backgroundColor),
                               borderRadius: BorderRadius.circular(14),
@@ -333,8 +335,7 @@ class _AddRecipeState extends State<AddRecipe> {
             if (_isLoading)
               Container(
                 color: Colors.black.withOpacity(0.5),
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
+                child: Center(
                   child: Lottie.asset(
                     'lib/assets/animations/Animation - 1724239121865.json',
                     width: 400,

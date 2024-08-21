@@ -1,9 +1,9 @@
-import 'dart:typed_data';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/material.dart';
+import 'dart:typed_data';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recipe_app/myWidgets/my_textbox.dart';
 
 class UserScreen extends StatefulWidget {
@@ -135,12 +135,22 @@ class _UserScreenState extends State<UserScreen> {
                 Stack(
                   children: [
                     Center(
-                      child: CircleAvatar(
-                        radius: 64,
-                        backgroundImage: profilePicUrl != null
-                            ? NetworkImage(profilePicUrl)
-                            : const AssetImage("lib/assets/images/user.jpg")
-                                as ImageProvider,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(64),
+                        child: FadeInImage.assetNetwork(
+                          placeholder: "lib/assets/images/user.jpg",
+                          image: profilePicUrl ?? '',
+                          imageErrorBuilder: (context, error, stackTrace) {
+                            return const CircleAvatar(
+                              radius: 64,
+                              backgroundImage:
+                                  AssetImage("lib/assets/images/user.jpg"),
+                            );
+                          },
+                          fit: BoxFit.cover,
+                          width: 128,
+                          height: 128,
+                        ),
                       ),
                     ),
                     Positioned(
